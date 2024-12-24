@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Death Roll Game</title>
+
+  <!-- Link to Google Fonts for Press Start 2P -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    /* General reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body styles */
+    body {
+      background-color: #8B0000; /* Dark red background */
+      font-family: 'Press Start 2P', sans-serif; /* Use Press Start 2P font */
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* Title */
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 30px; /* Space between title and roll number */
+      text-shadow: 4px 4px 10px black;
+      letter-spacing: 2px;
+      text-transform: uppercase; /* Make it all uppercase */
+    }
+
+    /* Roll display */
+    #currentRoll {
+      font-size: 5rem; /* Larger numbers */
+      color: white;
+      text-shadow: 4px 4px 10px black; /* Black outer border */
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    /* Button styles */
+    button {
+      background-color: black;
+      border: 2px solid white;
+      border-radius: 10px;
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      color: white;
+      font-family: 'Press Start 2P', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #444;
+      transform: scale(1.1);
+    }
+
+    /* Reset button specific margin */
+    #resetButton {
+      margin-top: 10px; /* Slightly less space than the roll button */
+    }
+
+    /* Responsive for smaller screens */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      button {
+        font-size: 1.2rem;
+        padding: 12px 25px;
+      }
+      #currentRoll {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Updated Title: "DEATH ROLL" -->
+  <h1>DEATH ROLL</h1>
+  
+  <div id="currentRoll">1000</div> <!-- Display the current roll -->
+  
+  <!-- Buttons for rolling and resetting -->
+  <button id="rollButton">Roll</button>
+  <button id="resetButton">Reset</button>
+
+  <!-- Retro sound effect -->
+  <audio id="button-sound" src="retro-sound.mp3" preload="auto"></audio>
+  <audio id="game-over-sound" src="game-over.mp3" preload="auto"></audio> <!-- Game over sound -->
+
+  <script>
+    let currentRoll = 1000;  // Initial roll value
+    const rollButton = document.getElementById('rollButton');
+    const resetButton = document.getElementById('resetButton');
+    const currentRollDisplay = document.getElementById('currentRoll');
+    const buttonSound = document.getElementById('button-sound');
+    const gameOverSound = document.getElementById('game-over-sound');
+    let gameOver = false;  // Track if the game is over
+
+    // Function to handle the roll
+    rollButton.addEventListener('click', () => {
+      if (gameOver) return; // Prevent further clicks if the game is over
+
+      buttonSound.play(); // Play sound on button click
+      rollButton.disabled = true; // Disable the roll button to prevent further presses
+
+      // Check if the roll is already 1 before the delay
+      if (currentRoll === 1) {
+        gameOverSound.play();
+        currentRollDisplay.textContent = "GAME OVER!";
+        rollButton.disabled = true; // Disable the roll button after the game is over
+        gameOver = true; // Set game over to true
+        return; // Exit the function early if game over
+      }
+
+      // Add a 1-second delay
+      setTimeout(() => {
+        currentRoll = Math.floor(Math.random() * currentRoll) + 1; // Randomize the roll
+        currentRollDisplay.textContent = currentRoll; // Update the displayed roll
+        
+        if (currentRoll === 1) {
+          gameOverSound.play();
+          currentRollDisplay.textContent = "GAME OVER!";
+          rollButton.disabled = true; // Disable the roll button after the game is over
+          gameOver = true; // Set game over to true
+        } else {
+          rollButton.disabled = false; // Re-enable the roll button
+        }
+      }, 500); // 0.5-second delay
+    });
+
+    // Reset the game
+    resetButton.addEventListener('click', () => {
+      currentRoll = 1000;
+      currentRollDisplay.textContent = currentRoll; // Reset the display
+      rollButton.disabled = false; // Re-enable the roll button
+      gameOver = false; // Reset game over flag
+    });
+  </script>
+
+</body>
+</html>

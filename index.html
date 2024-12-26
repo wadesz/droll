@@ -32,7 +32,7 @@
 
     /* Title */
     h1 {
-      font-size: 5rem;
+      font-size: 3rem;
       margin-bottom: 30px; /* Space between title and roll number */
       text-shadow: 4px 4px 10px black;
       letter-spacing: 2px;
@@ -41,7 +41,7 @@
 
     /* Roll display */
     #currentRoll {
-      font-size: 7rem; /* Larger numbers */
+      font-size: 5rem; /* Larger numbers */
       color: white;
       text-shadow: 4px 4px 10px black; /* Black outer border */
       margin-top: 20px;
@@ -52,9 +52,9 @@
     button {
       background-color: black;
       border: 2px solid white;
-      border-radius: 15px;
-      padding: 20px 40px;
-      font-size: 2rem;
+      border-radius: 10px;
+      padding: 15px 30px;
+      font-size: 1.5rem;
       color: white;
       font-family: 'Press Start 2P', sans-serif;
       cursor: pointer;
@@ -75,17 +75,17 @@
     /* Responsive for smaller screens */
     @media (max-width: 768px) {
       body {
-        padding: 11px;
+        padding: 10px;
       }
       h1 {
-        font-size: 3rem;
+        font-size: 2rem;
       }
       button {
-        font-size: 2rem;
-        padding: 15px 30px;
+        font-size: 1.2rem;
+        padding: 12px 25px;
       }
       #currentRoll {
-        font-size: 5rem;
+        font-size: 3rem;
       }
     }
   </style>
@@ -114,29 +114,27 @@
     const gameOverSound = document.getElementById('game-over-sound');
     let gameOver = false;  // Track if the game is over
 
+    // Function to play audio with reset if already playing
+    const playSound = (sound) => {
+      sound.pause();
+      sound.currentTime = 0;
+      sound.play();
+    };
+
     // Function to handle the roll
     rollButton.addEventListener('click', () => {
       if (gameOver) return; // Prevent further clicks if the game is over
 
-      buttonSound.play(); // Play sound on button click
+      playSound(buttonSound); // Play sound on button click
       rollButton.disabled = true; // Disable the roll button to prevent further presses
 
-      // Check if the roll is already 1 before the delay
-      if (currentRoll === 1) {
-        gameOverSound.play();
-        currentRollDisplay.textContent = "GAME OVER!";
-        rollButton.disabled = true; // Disable the roll button after the game is over
-        gameOver = true; // Set game over to true
-        return; // Exit the function early if game over
-      }
-
-      // Add a 1-second delay
+      // Add a delay before rolling
       setTimeout(() => {
         currentRoll = Math.floor(Math.random() * currentRoll) + 1; // Randomize the roll
         currentRollDisplay.textContent = currentRoll; // Update the displayed roll
         
         if (currentRoll === 1) {
-          gameOverSound.play();
+          playSound(gameOverSound); // Play game over sound
           currentRollDisplay.textContent = "GAME OVER!";
           rollButton.disabled = true; // Disable the roll button after the game is over
           gameOver = true; // Set game over to true
